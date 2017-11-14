@@ -1,7 +1,22 @@
 from .models import Post
 from django.utils import timezone
+from django.contrib.auth import login, authenticate
 from django.shortcuts import redirect, render, get_object_or_404
-from .forms import PostForm
+from .forms import PostForm, SignUpForm
+
+def signup(request):
+    if request.method == 'POST':
+        form = SignUpForm(request.POST)
+        if form.is_valid():
+            form.save();
+            username = form.cleaned_data.get('username')
+            raw_password = form.cleaned_data.get('password1')
+            user = authenticate(username=username, password=raw_password)
+            login(request,user)
+            return redirect('blogg:post_list')
+    else:
+        form = SignUpForm()
+    return render(request, 'blog/signup.html', {'form':form})
 
 def post_list(request):
 	posts = Post.objects.filter(published_date__lte=timezone.now()).order_by('published_date')
