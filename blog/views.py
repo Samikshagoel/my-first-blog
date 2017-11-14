@@ -20,8 +20,7 @@ def post_new(request):
             post.published_date = timezone.now()
             post.save()
             post = get_object_or_404(Post, pk=post.pk)
-            return render(request, 'blog/post_detail.html', {'post':post})
-            #return redirect('post_detail', pk=post.pk)
+            return redirect('blogg:post_detail', pk=post.pk)
     else:
         form = PostForm()
     return render(request, 'blog/post_edit.html', {'form': form})
@@ -37,8 +36,12 @@ def post_edit(request, pk):
             poster.published_date = timezone.now()
             poster.save()
             post = get_object_or_404(Post, pk=post.pk)
-            return render(request, 'blog/post_detail.html', {'post':post})
-            #return redirect('post_detail', pk=post.pk)
+            return redirect('blogg:post_detail', pk=post.pk)
     else:
         form = PostForm(instance=post)
     return render(request, 'blog/post_edit.html', {'form': form})
+
+def post_delete(request, pk):
+    post = get_object_or_404(Post, pk=pk)
+    post.delete()
+    return redirect('blogg:post_list')
