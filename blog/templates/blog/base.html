@@ -11,6 +11,7 @@
 	    <div class="page-header">
 	    	{{ user }}
 	    	{% if user.is_authenticated %}
+	    		{{ user }}
 			    <a href="{% url 'blogg:post_new' %}" class="top-menu"><span class="glyphicon glyphicon-plus"></span></a>
 			{% endif %}
 	        <h1><a href="/">Chikenette Sector-15 Market</a></h1>
