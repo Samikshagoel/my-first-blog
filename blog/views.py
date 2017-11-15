@@ -3,15 +3,18 @@ from django.utils import timezone
 from django.contrib.auth import login, authenticate
 from django.shortcuts import redirect, render, get_object_or_404
 from .forms import PostForm, SignUpForm
+from django.contrib.auth.models import User
 
 def signup(request):
     if request.method == 'POST':
         form = SignUpForm(request.POST)
         if form.is_valid():
-            form.save();
-            username = form.cleaned_data.get('username')
+            user = form.save()
+            user.refresh_from_db()
+            user.profile.birth_date=form.cleaned_data.get('birth_date')
+            user.save()
             raw_password = form.cleaned_data.get('password1')
-            user = authenticate(username=username, password=raw_password)
+            user = authenticate(username=user.username, password=raw_password)
             login(request,user)
             return redirect('blogg:post_list')
     else:
@@ -60,3 +63,6 @@ def post_delete(request, pk):
     post = get_object_or_404(Post, pk=pk)
     post.delete()
     return redirect('blogg:post_list')
+
+def profile(request):
+    return render(request, 'blog/profile.html')
