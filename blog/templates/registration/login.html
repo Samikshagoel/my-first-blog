@@ -7,7 +7,7 @@
     {{ form.as_p }}
     <button type="submit">Login</button>
   </form>
-  <form action="/signup">
+  <form action={% url 'blogg:signup' %}>
   	<button type="submit">Sign up</button>
   </form>
 {% endblock %}
